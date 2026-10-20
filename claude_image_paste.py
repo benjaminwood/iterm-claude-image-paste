@@ -255,6 +255,10 @@ async def upload_over_ssh(ssh_argv, png):
         *opts,
         # Overrides come last so they win over the session's own flags:
         "-T",  # no pty — we're streaming bytes over stdin
+        # A host whose ~/.ssh/config entry sets RemoteCommand (e.g. to attach
+        # a multiplexer) would refuse our command: "Cannot execute
+        # command-line and remote command".
+        "-o", "RemoteCommand=none",
         "-o", "BatchMode=yes",  # never prompt; fail fast instead
         "-o", "ClearAllForwardings=yes",  # don't re-bind the session's -L/-R/-D
         "-o", "ConnectTimeout=5",
